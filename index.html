@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="./img/2.jpg" />
+    <link rel="stylesheet" href="./LEDfont/LEDfont.css">
+    <link rel="stylesheet" href="./myAPlayer.css">
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    <script src="https://cdn.bootcss.com/aplayer/1.10.1/APlayer.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/meting@2.0.1/dist/Meting.min.js"></script>
+    <!-- Import Vue 3 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
+    <!-- Import style -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/element-plus/dist/index.css" />
+    <!-- Import component library -->
+    <script src="https://cdn.jsdelivr.net/npm/element-plus"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SXSQ's Blog</title>
+</head>
+
+<body style="margin: 0;">
+    <div id="app">
+        <div class="index-cover" :style="{ height: windowHeight + 'px', backgroundImage: 'url(' + cover_url + ')' }">
+            <div class="index-cover-filter">
+                <el-row style="margin: 0 10% 0 10%;height: 100%;">
+                    <el-col :span="12" :xs="24">
+                        <div class="index-cover-main">
+                            <div style="width:100%">
+                                <el-row>
+                                    <el-col style="display:flex">
+                                        <el-avatar :size="100" :src="avatar_url" fit="fit"
+                                            style="width: 100px;height: 100px;margin-right: 15px;"></el-avatar>
+                                        <span class="img-title-big index-cover-font">SXSQ</span>
+                                    </el-col>
+                                </el-row>
+
+                                <!-- <el-row>
+                                    <el-col :span="20" :xs="24">
+                                        <div class="index-cover-element index-cover-href">
+                                            <i style="font-size:24px" class="fa fa-github index-cover-icon"></i>
+                                            <i style="font-size:24px" class="fa fa-qq index-cover-icon"></i>
+                                            <i style="font-size:24px" class="fa fa-weixin index-cover-icon"></i>
+                                        </div>
+                                    </el-col>
+                                </el-row> -->
+
+                                <el-row>
+                                    <el-col :span="20" :xs="24">
+                                        <div class="index-cover-element index-cover-motto-div">
+                                            <span class="index-cover-motto-span index-cover-font">“
+                                                既往不恋，当下不杂，未来不迎”</span>
+                                        </div>
+                                    </el-col>
+                                </el-row>
+                            </div>
+                        </div>
+                    </el-col>
+
+                    <el-col :span="12" :xs="0">
+
+                        <div class="index-cover-main">
+                            <div class="index-cover-element index-cover-motto-div" style="margin: 30px;">
+                                <span class="index-cover-font week">{{ week }}</span>
+                                <!-- <br> -->
+                                <span class="index-cover-font hour">{{ nowtime }}</span>
+                            </div>
+
+                            <div class="index-cover-element index-cover-music">
+                                <meting-js server="netease" type="playlist" id="3071528549" fixed="false" theme="#25CCF7"></meting-js>
+                            </div>
+
+                        </div>
+                    </el-col>
+                </el-row>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const { createApp, reactive, toRefs, ref, onMounted } = Vue;
+        var windowHeight = ref(0)     // 屏幕高度
+        var nowtime = ref("")
+        var week = ref("")
+        // 获取屏幕尺寸
+        var getWindowResize = function () {
+            windowHeight.value = window.innerHeight
+        }
+        time();
+        setInterval(time, 1000);
+        function time () {
+            const date = new Date();
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const dates = date.getDate();
+            const hours = date.getHours();
+            const minutes = date.getMinutes();
+            const seconds = date.getSeconds();
+            const day = date.getDay();
+
+
+            //补0
+            const m = month < 10 ? String("0" + month) : String(month);
+            const d = dates < 10 ? String('0' + dates) : String(dates);
+            const h = hours < 10 ? String('0' + hours) : String(hours);
+            const min = minutes < 10 ? String('0' + minutes) : String(minutes);
+            const s = seconds < 10 ? String('0' + seconds) : String(seconds);
+            console.log(s)
+            nowtime.value = h + ' : ' + min + ' : ' + s;
+            week.value = year + ' 年 ' + m + ' 月 ' + d + ' 日 ' + ' 星期' + ['一', '二', '三', '四', '五', '六', '日'][day - 1];
+        }
+        
+
+
+        const app = createApp({
+            setup() {
+                var cover_url = './img/1.png'
+                var avatar_url = './img/2.jpg'
+
+
+
+
+                onMounted(() => {
+                    getWindowResize()
+                    window.addEventListener('resize', getWindowResize)
+                })
+
+                return {
+                    cover_url,
+                    avatar_url,
+                    windowHeight,
+                    week,
+                    nowtime
+                }
+            }
+        }).use(ElementPlus).mount("#app");
+
+
+
+
+
+        //因为定时器第一次会延时一秒，所以第一次会有一秒延迟，提前调用一次
+        time();
+
+        //设置定时器，每秒一次
+        setInterval(time, 1000)
+
+        //获取当地时间，封装成函数
+        function time() {
+            const date = new Date();
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const dates = date.getDate();
+            const hours = date.getHours();
+            const minutes = date.getMinutes();
+            const seconds = date.getSeconds();
+            const day = date.getDay();
+
+
+            //补0
+            const m = month < 10 ? String("0" + month) : String(month);
+            const d = dates < 10 ? String('0' + dates) : String(dates);
+            const h = hours < 10 ? String('0' + hours) : String(hours);
+            const min = minutes < 10 ? String('0' + minutes) : String(minutes);
+            const s = seconds < 10 ? String('0' + seconds) : String(seconds);
+
+            nowtime.value = h + ' : ' + min + ' : ' + s;
+            week.value = year + ' 年 ' + m + ' 月 ' + d + ' 日 ' + ' 星期' + ['一', '二', '三', '四', '五', '六', '日'][day - 1];
+        }
+
+    </script>
+
+</body>
+
+
+
+</html>
